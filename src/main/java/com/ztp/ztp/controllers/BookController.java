@@ -1,18 +1,20 @@
-package com.ztp.ztp.resources;
+package com.ztp.ztp.controllers;
 
 import com.ztp.ztp.service.BookService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/books")
-public class BookResource {
+public class BookController {
 
     final private BookService bookService;
 
-
-    public BookResource(BookService bookService) {
+    public BookController(BookService bookService) {
         this.bookService = bookService;
     }
 
@@ -23,5 +25,4 @@ public class BookResource {
         return bookService.getBooks(author, title, releaseDate);
 
     }
-
 }

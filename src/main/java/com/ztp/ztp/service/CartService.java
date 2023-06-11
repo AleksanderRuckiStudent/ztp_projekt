@@ -18,7 +18,7 @@ import java.util.Optional;
 public class CartService {
 
     private final BookRepository bookRepository;
-    private final Cart cart;
+    private Cart cart;
 
     public CartService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
@@ -34,7 +34,7 @@ public class CartService {
                 .filter(it -> it.getId().equals(id))
                 .findAny();
 
-        if(bookToRemove.isPresent()) {
+        if (bookToRemove.isPresent()) {
             cart.getBookList().remove(bookToRemove.get());
             cart.setUpdatedAt(Date.from(Instant.now()));
             return ResponseEntity.noContent().build();
@@ -43,16 +43,20 @@ public class CartService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<?> addBookToCart(String id) {
+    public ResponseEntity<Cart> addBookToCart(String id) {
         Mono<Book> bookMono = bookRepository.findById(id);
         Optional<Book> book = bookMono.blockOptional();
 
-        if(book.isPresent()) {
+        if (book.isPresent()) {
             cart.getBookList().add(book.get());
             cart.setUpdatedAt(Date.from(Instant.now()));
             return ResponseEntity.ok(cart);
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    public void clearCart() {
+        this.cart = new Cart(Date.from(Instant.now()), Date.from(Instant.now()), new ArrayList<>());
     }
 }

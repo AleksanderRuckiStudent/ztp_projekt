@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -22,14 +23,12 @@ public class BookService {
     public ResponseEntity<Flux<?>> getBooks(String author, String title, String releaseDate) {
         String authorNotNull = (author != null) ? author : "";
         String titleNotNull = (title != null) ? title : "";
-        if(releaseDate != null )
-        {
+        if (releaseDate != null) {
             try {
                 int releaseYear = Integer.parseInt(releaseDate);
                 Flux<Book> books = bookRepository.findAllByAuthorContainingAndTitleContainingAndReleaseDateBetween(authorNotNull, titleNotNull, yearToDate(releaseYear), yearToDate(releaseYear + 1));
                 return ResponseEntity.ok(books);
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 String errorMessage = "Invalid releaseDate format. Please provide the releaseDate parameter in the format 'yyyy'.";
                 return ResponseEntity.badRequest().body(Flux.just(errorMessage));
             }
