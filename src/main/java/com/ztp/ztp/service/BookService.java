@@ -5,6 +5,7 @@ import com.ztp.ztp.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
+import java.util.Date;
 
 @Service
 @Transactional
@@ -16,7 +17,13 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public Flux<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public Flux<Book> getBooks(String author, String title, Date releaseDate) {
+        String authorNotNull = (author != null) ? author : "";
+        String titleNotNull = (title != null) ? title : "";
+        if(releaseDate != null )
+        {
+            return bookRepository.findAllByAuthorContainingAndTitleContainingAndReleaseDate(authorNotNull, titleNotNull, releaseDate);
+        }
+        return bookRepository.findAllByAuthorContainingAndTitleContaining(authorNotNull, titleNotNull);
     }
 }
