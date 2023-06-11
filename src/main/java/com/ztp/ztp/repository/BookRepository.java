@@ -8,6 +8,6 @@ import java.util.Date;
 public interface BookRepository extends ReactiveMongoRepository<Book, String> {
     Flux<Book> findAll();
     Flux<Book> findAllByAuthorContainingAndTitleContaining(String author, String title);
-    Flux<Book> findAllByAuthorContainingAndTitleContainingAndReleaseDate(String author, String title, Date releaseDate);
+    Flux<Book> findAllByAuthorContainingAndTitleContainingAndReleaseDateBetween(String author, String title, Date startYear, Date endYear);
 
 }
