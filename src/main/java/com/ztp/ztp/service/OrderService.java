@@ -8,6 +8,7 @@ import com.ztp.ztp.repository.OrderRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
@@ -27,6 +28,15 @@ public class OrderService {
                         OrderRepository orderRepository) {
         this.cartService = cartService;
         this.orderRepository = orderRepository;
+    }
+
+    public Flux<Order> getOrders() {
+        return orderRepository.findAll();
+    }
+
+    public ResponseEntity<?> getOrderById(String id) {
+        Order order = orderRepository.findById(id).block();
+        return order == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(order);
     }
 
     public ResponseEntity<Mono<?>> placeOrder(String client, Address address) {
